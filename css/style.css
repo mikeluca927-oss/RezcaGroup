@@ -302,6 +302,16 @@ nav.primary-nav a.active::after{
     opacity:0; pointer-events:none; transition: opacity .4s var(--ease);
   }
   .nav-scrim.open{ opacity:1; pointer-events:auto; }
+
+  /* backdrop-filter on the scrolled header creates a CSS containing block,
+     which breaks position:fixed on the nested mobile nav panel (it ends up
+     anchored to the header's small box instead of the viewport). Drop the
+     blur on mobile and use a solid background instead so the full-screen
+     menu still opens correctly. */
+  header#site-header.scrolled{
+    backdrop-filter: none; -webkit-backdrop-filter: none;
+    background: rgba(5,5,5,.94);
+  }
 }
 
 /* ---------- Hero ---------- */
