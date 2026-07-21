@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://rezcagroup.com/sitemap.xml
