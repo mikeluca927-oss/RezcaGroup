@@ -232,16 +232,43 @@
     requestAnimationFrame(step);
   }
 
-  /* ---------------- Contact form (demo, no backend) ---------------- */
+  /* ---------------- Contact form (submits to Formspree) ---------------- */
   const form = document.getElementById('contact-form');
   if(form){
+    const success = document.getElementById('form-success');
+    const errorBox = document.getElementById('form-error');
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const submitLabel = submitBtn ? submitBtn.innerHTML : '';
+
     form.addEventListener('submit', function(e){
       e.preventDefault();
       const requiredOk = form.checkValidity();
       if(!requiredOk){ form.reportValidity(); return; }
-      form.style.display = 'none';
-      const success = document.getElementById('form-success');
-      if(success) success.classList.add('show');
+
+      if(errorBox) errorBox.classList.remove('show');
+      if(submitBtn){
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = 'Sending…';
+      }
+
+      fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      }).then(function(response){
+        if(response.ok){
+          form.style.display = 'none';
+          if(success) success.classList.add('show');
+        } else {
+          throw new Error('Form submission failed');
+        }
+      }).catch(function(){
+        if(errorBox) errorBox.classList.add('show');
+        if(submitBtn){
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = submitLabel;
+        }
+      });
     });
   }
 
